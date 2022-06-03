@@ -5,11 +5,23 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'standard'
+    "standard"
   ],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: "latest"
   },
   rules: {
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    quotes: [
+      "error",
+      "double"
+    ],
+    semi: [
+      "error",
+      "always"
+    ]
   }
-}
+};

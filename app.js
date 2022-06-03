@@ -1,10 +1,10 @@
-const express = require('express')
+const express = require("express");
 
-const PORT = 8000
-const app = express()
+const PORT = 8000;
+const app = express();
 
-app.use('/api', require('./api'))
+app.use("/api", require("./api"));
 
 app.listen(PORT, () => {
-  console.log(`Carris Metropolitana API listening on port ${PORT}`)
-})
+  console.log(`Carris Metropolitana API listening on port ${PORT}`);
+});
