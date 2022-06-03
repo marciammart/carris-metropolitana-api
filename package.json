@@ -4,9 +4,10 @@
   "description": "A Node.js API to access public transport information in Lisbon using data provided by Carris Metropolitana (www.carrismetropolitana.pt)",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "lint": "eslint --fix --ext .js,.jsx ."
+    "lint": "eslint --fix --ext .js,.jsx .",
+    "test": "nyc --reporter=json-summary --reporter=text mocha 'test/**/*.js' --recursive --timeout=3000",
+    "coverage:badge": "coverage-badge-creator"
   },
   "author": "Márcia Martins",
   "license": "MIT",
@@ -15,11 +16,17 @@
     "express": "^4.18.1"
   },
   "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "coverage-badge-creator": "^1.0.11",
     "eslint": "^8.16.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.1",
     "eslint-plugin-promise": "^6.0.0",
-    "nodemon": "^2.0.16"
+    "mocha": "^10.0.0",
+    "nock": "^13.2.4",
+    "nodemon": "^2.0.16",
+    "nyc": "^15.1.0"
   }
 }

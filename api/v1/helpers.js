@@ -1,9 +1,9 @@
 const originalData = require("../../data/original_data");
 const axios = require("axios");
 
-const BASE_URL = "https://www.carrismetropolitana.pt/images/horarios/";
+exports.CARRIS_BASE_URL = "https://www.carrismetropolitana.pt/images/horarios";
 
-const getOldOperator = (oldRoute) => {
+exports.getOldOperator = (oldRoute) => {
   const name = Object.entries(originalData.operators).map(([name, routes]) => ({
     name,
     routes: Object.keys(routes)
@@ -37,7 +37,7 @@ exports.getRoutes = () => {
         id: route[0],
         name: route[1],
         old_route: oldRoute,
-        old_operator: getOldOperator(oldRoute),
+        old_operator: this.getOldOperator(oldRoute),
         county
       })));
     }
@@ -53,7 +53,7 @@ exports.getRoute = (routeId) => {
 };
 
 const requestTimetable = async (directionId) => {
-  const response = await axios.get(`${BASE_URL}/${directionId}.json`, {
+  const response = await axios.get(`${this.CARRIS_BASE_URL}/${directionId}.json`, {
     credentials: "omit",
     headers: {
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:100.0) Gecko/20100101 Firefox/100.0",

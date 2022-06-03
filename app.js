@@ -5,6 +5,8 @@ const app = express();
 
 app.use("/api", require("./api"));
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Carris Metropolitana API listening on port ${PORT}`);
 });
+
+module.exports = server;

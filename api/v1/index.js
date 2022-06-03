@@ -30,10 +30,8 @@ router.get("/routes/:routeId/directions", (req, res) => {
 router.get("/routes/:routeId/directions/:directionId", async (req, res) => {
   const { routeId, directionId } = req.params;
   const direction = getDirections(routeId).find(direction => direction.id === directionId);
-  const departures = await getDepartures(directionId);
-  res.json({
-    direction, departures
-  });
+  direction.departures = await getDepartures(directionId);
+  res.json(direction);
 });
 
 module.exports = router;
