@@ -1,0 +1,25 @@
+{
+  "name": "carris-metropolitana-api",
+  "version": "1.0.0",
+  "description": "A Node.js API to access public transport information in Lisbon using data provided by Carris Metropolitana (www.carrismetropolitana.pt)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "lint": "eslint --fix --ext .js,.jsx ."
+  },
+  "author": "Márcia Martins",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "nodemon": "^2.0.16"
+  }
+}
