@@ -7,7 +7,8 @@
   "description": "A Node.js API to access public transport information in Lisbon using data provided by Carris Metropolitana (www.carrismetropolitana.pt)",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon src/app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "nyc --reporter=json-summary --reporter=text mocha 'src/test/**/*.js' --recursive --timeout=3000",
     "coverage:badge": "coverage-badge-creator"
