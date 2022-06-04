@@ -3,17 +3,17 @@ const axios = require("axios");
 
 exports.CARRIS_BASE_URL = "https://www.carrismetropolitana.pt/images/horarios";
 
-exports.getOldOperator = (oldRoute) => {
+exports.getPreviousOperator = (previousRoute) => {
   const name = Object.entries(originalData.operators).map(([name, routes]) => ({
     name,
     routes: Object.keys(routes)
-  })).find(operator => operator.routes.includes(oldRoute)).name;
+  })).find(operator => operator.routes.includes(previousRoute)).name;
   return name;
 };
 
 exports.filterRoutes = (routes, filter, limit = undefined) => {
   let filteredRoutes = routes;
-  const validRouteFilters = ["county", "old_route", "old_operator"];
+  const validRouteFilters = ["county", "previousRoute", "previousOperator"];
   for (const validFilter of validRouteFilters) {
     filteredRoutes = filter[validFilter] ? filteredRoutes.filter(r => r[validFilter] === filter[validFilter]) : filteredRoutes;
   }
@@ -29,15 +29,15 @@ exports.getRoutes = () => {
 
   for (const county of counties) {
     const countyRoutes = routesConversion[county];
-    const oldRoutes = Object.keys(countyRoutes);
+    const previousRoutes = Object.keys(countyRoutes);
 
-    for (const oldRoute of oldRoutes) {
-      const newRoutes = countyRoutes[oldRoute];
+    for (const previousRoute of previousRoutes) {
+      const newRoutes = countyRoutes[previousRoute];
       routes = routes.concat(newRoutes.map(route => ({
         id: route[0],
         name: route[1],
-        old_route: oldRoute,
-        old_operator: this.getOldOperator(oldRoute),
+        previousRoute,
+        previousOperator: this.getPreviousOperator(previousRoute),
         county
       })));
     }

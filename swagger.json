@@ -1,0 +1,365 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "🚌 Carris Metropolitana API",
+    "description": "A Node.js REST API built to easily access and search public transport information in Lisbon using data provided by Carris Metropolitana.",
+    "contact": {
+      "name": "GitHub",
+      "url": "https://github.com/marciammart/carris-metropolitana-api"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://github.com/marciammart/carris-metropolitana-api/blob/main/LICENSE"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local API"
+    },
+    {
+      "url": "https://carris-metropolitana-api.herokuapp.com",
+      "description": "Public API"
+    }
+  ],
+  "paths": {
+    "/api/v1/routes": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "description": "Returns all available routes",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Max number of results to return"
+          },
+          {
+            "name": "county",
+            "in": "query",
+            "description": "County to filter by"
+          },
+          {
+            "name": "previousRoute",
+            "in": "query",
+            "description": "Previous route to filter by"
+          },
+          {
+            "name": "previousOperator",
+            "in": "query",
+            "description": "Previous operator to filter by"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "$ref": "#/components/schemas/Routes"
+                },
+                "examples": {
+                  "routes": {
+                    "value": [
+                      {
+                        "id": "4511",
+                        "name": "Alcochete (Freeport) - Montijo (Terminal Rodoviário), via Samouco",
+                        "previousRoute": "410",
+                        "previousOperator": "JJ Santo António",
+                        "county": "Alcochete"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/api/v1/routes/{routeId}": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "description": "Returns route given an ID",
+        "parameters": [
+          {
+            "name": "routeId",
+            "in": "path",
+            "description": "Route ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Route"
+                },
+                "examples": {
+                  "route": {
+                    "value": {
+                      "id": "4511",
+                      "name": "Alcochete (Freeport) - Montijo (Terminal Rodoviário), via Samouco",
+                      "previousRoute": "410",
+                      "previousOperator": "JJ Santo António",
+                      "county": "Alcochete",
+                      "directions": [
+                        {
+                          "id": "4511_0_1",
+                          "direction": "ida",
+                          "description": "Alcochete (Freeport) - Montijo (Terminal Rodoviário), via Samouco"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/api/v1/routes/{routeId}/directions": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "description": "Returns route directions",
+        "parameters": [
+          {
+            "name": "routeId",
+            "in": "path",
+            "description": "Route ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "$ref": "#/components/schemas/Directions"
+                },
+                "examples": {
+                  "directions": {
+                    "value": [
+                      {
+                        "id": "4511_0_1",
+                        "direction": "ida",
+                        "description": "Alcochete (Freeport) - Montijo (Terminal Rodoviário), via Samouco"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/api/v1/routes/{routeId}/directions/{directionId}": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "description": "Returns route given an ID",
+        "parameters": [
+          {
+            "name": "routeId",
+            "in": "path",
+            "description": "Route ID"
+          },
+          {
+            "name": "directionId",
+            "in": "path",
+            "description": "Direction ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Direction"
+                },
+                "examples": {
+                  "direction": {
+                    "value": {
+                      "id": "4511_0_1",
+                      "direction": "ida",
+                      "description": "Alcochete (Freeport) - Montijo (Terminal Rodoviário), via Samouco",
+                      "departures": [
+                        {
+                          "stop": "Alcochete (Av Euro 2004) Freeport",
+                          "timetable": [
+                            {
+                              "time": "13:35",
+                              "condition": {
+                                "id": 4,
+                                "description": "Dias úteis todo o ano"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Routes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "previousRoute": {
+              "type": "string"
+            },
+            "previousOperator": {
+              "type": "string"
+            },
+            "county": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Route": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "previousRoute": {
+            "type": "string"
+          },
+          "previousOperator": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "directions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "direction": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Directions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "direction": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Direction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "departures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stop": {
+                  "type": "string"
+                },
+                "timetable": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "time": {
+                        "type": "string"
+                      },
+                      "condition": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

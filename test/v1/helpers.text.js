@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const {
-  getOldOperator,
+  getPreviousOperator,
   filterRoutes,
   getRoutes,
   getRoute,
@@ -13,9 +13,9 @@ chai.should();
 chai.use(chaiHttp);
 
 describe("Helpers v1", () => {
-  describe("getOldOperator", () => {
-    it("returns old operator given and old route", (done) => {
-      const result = getOldOperator("301");
+  describe("getPreviousOperator", () => {
+    it("returns previous operator given the previous route", (done) => {
+      const result = getPreviousOperator("301");
       expect(result).to.equal("Rodoviária de Lisboa");
       done();
     });
@@ -24,17 +24,17 @@ describe("Helpers v1", () => {
   describe("filterRoutes", () => {
     it("returns filtered routes", (done) => {
       const testRoutes = [
-        { old_operator: "Rodoviária de Lisboa", old_route: "301" },
-        { old_operator: "Rodoviária de Lisboa", old_route: "303" },
-        { old_operator: "Rodoviária de Lisboa", old_route: "305" },
-        { old_operator: "Barraqueiro Transportes", old_route: "200" }
+        { previousOperator: "Rodoviária de Lisboa", previousRoute: "301" },
+        { previousOperator: "Rodoviária de Lisboa", previousRoute: "303" },
+        { previousOperator: "Rodoviária de Lisboa", previousRoute: "305" },
+        { previousOperator: "Barraqueiro Transportes", previousRoute: "200" }
       ];
-      const filter = { old_operator: "Rodoviária de Lisboa" };
+      const filter = { previousOperator: "Rodoviária de Lisboa" };
       const limit = 2;
       const result = filterRoutes(testRoutes, filter, limit);
       expect(result.length).to.equal(limit);
       result.forEach(route => {
-        expect(route.old_operator).to.equal("Rodoviária de Lisboa");
+        expect(route.previousOperator).to.equal("Rodoviária de Lisboa");
       });
       done();
     });
@@ -47,8 +47,8 @@ describe("Helpers v1", () => {
         route.should.have.keys([
           "id",
           "name",
-          "old_route",
-          "old_operator",
+          "previousRoute",
+          "previousOperator",
           "county"
         ]);
       });
@@ -62,8 +62,8 @@ describe("Helpers v1", () => {
       result.should.have.keys([
         "id",
         "name",
-        "old_route",
-        "old_operator",
+        "previousRoute",
+        "previousOperator",
         "county",
         "directions"
       ]);

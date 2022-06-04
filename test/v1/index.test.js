@@ -27,8 +27,8 @@ describe("API v1", () => {
             route.should.have.keys([
               "id",
               "name",
-              "old_route",
-              "old_operator",
+              "previousRoute",
+              "previousOperator",
               "county"
             ]);
           });
@@ -46,8 +46,8 @@ describe("API v1", () => {
           response.body.should.have.keys([
             "id",
             "name",
-            "old_route",
-            "old_operator",
+            "previousRoute",
+            "previousOperator",
             "county",
             "directions"
           ]);
