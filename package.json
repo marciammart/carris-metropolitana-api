@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon app.js",
     "lint": "eslint --fix --ext .js,.jsx .",
-    "test": "nyc --reporter=json-summary --reporter=text mocha 'test/**/*.js' --recursive --timeout=3000",
+    "test": "nyc --reporter=json-summary --reporter=text mocha 'src/test/**/*.js' --recursive --timeout=3000",
     "coverage:badge": "coverage-badge-creator"
   },
   "author": "Márcia Martins",

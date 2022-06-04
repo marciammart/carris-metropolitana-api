@@ -1,4 +1,4 @@
-const originalData = require("../../data/original_data");
+const originalData = require("../../../data/original_data");
 const axios = require("axios");
 
 exports.CARRIS_BASE_URL = "https://www.carrismetropolitana.pt/images/horarios";
