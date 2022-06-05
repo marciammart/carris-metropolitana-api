@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/github/license/marciammart/carris-metropolitana-api?color=yellow&label=Licence)](./LICENSE)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/marciammart/carris-metropolitana-api?label=Version)
 ![](https://img.shields.io/badge/Coverage-100%25-83A603.svg?prefix=$coverage$)
-[![Project Status: WIP](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://www.repostatus.org/#active)
+[![Project Status: Active](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://www.repostatus.org/#active)
 
 A Node.js REST API built to easily access and search public transport information in Lisbon using data provided by [Carris Metropolitana](https://www.carrismetropolitana.pt/).
 

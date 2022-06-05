@@ -2,7 +2,7 @@
   "name": "carris-metropolitana-api",
   "version": "1.0.0",
   "engines": {
-    "node": "14.19.3"
+    "node": "16.14.2"
   },
   "description": "A Node.js API to access public transport information in Lisbon using data provided by Carris Metropolitana (www.carrismetropolitana.pt)",
   "main": "app.js",
