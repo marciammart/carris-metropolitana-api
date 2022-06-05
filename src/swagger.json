@@ -15,12 +15,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000",
-      "description": "Local API"
-    },
-    {
       "url": "https://carris-metropolitana-api.herokuapp.com",
       "description": "Public API"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local API"
     }
   ],
   "paths": {
