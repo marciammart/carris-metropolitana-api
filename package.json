@@ -1,6 +1,6 @@
 {
   "name": "carris-metropolitana-api",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "engines": {
     "node": "16.14.2"
   },
