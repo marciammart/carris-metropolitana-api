@@ -31,11 +31,25 @@ describe("Helpers v1", () => {
       ];
       const filter = { previousOperator: "Rodoviária de Lisboa" };
       const limit = 2;
-      const result = filterRoutes(testRoutes, filter, limit);
+      const result = filterRoutes(testRoutes, filter, undefined, limit);
       expect(result.length).to.equal(limit);
       result.forEach(route => {
         expect(route.previousOperator).to.equal("Rodoviária de Lisboa");
       });
+      done();
+    });
+
+    it("returns filtered routes with contains", (done) => {
+      const testRoutes = [
+        { previousRoute: "301" },
+        { previousRoute: "303" },
+        { previousRoute: "200" }
+      ];
+      const filter = { previousRoute: "30" };
+      const filterOperator = "contains";
+      const result = filterRoutes(testRoutes, filter, filterOperator);
+      expect(result.length).to.equal(2);
+      expect(result.map(route => route.previousRoute)).to.eql(["301", "303"]);
       done();
     });
   });

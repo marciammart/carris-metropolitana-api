@@ -37,6 +37,23 @@
             "description": "Max number of results to return"
           },
           {
+            "name": "filterOperator",
+            "in": "query",
+            "description": "Filter operator",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "eq",
+                "contains"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Route ID to filter by"
+          },
+          {
             "name": "county",
             "in": "query",
             "description": "County to filter by"

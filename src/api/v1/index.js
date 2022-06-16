@@ -4,10 +4,10 @@ const { getRoutes, getDirections, getDepartures, filterRoutes, getRoute } = requ
 const router = express.Router();
 
 router.get("/routes", (req, res) => {
-  const { limit, county, previousRoute, previousOperator } = req.query;
-  const filter = { county, previousRoute, previousOperator };
+  const { limit, county, previousRoute, previousOperator, id, filterOperator } = req.query;
+  const filter = { county, previousRoute, previousOperator, id };
   const routes = getRoutes();
-  const filteredRoutes = filterRoutes(routes, filter, limit);
+  const filteredRoutes = filterRoutes(routes, filter, filterOperator, limit);
   res.json(filteredRoutes);
 });
 

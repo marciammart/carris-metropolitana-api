@@ -11,11 +11,22 @@ exports.getPreviousOperator = (previousRoute) => {
   return name;
 };
 
-exports.filterRoutes = (routes, filter, limit = undefined) => {
+const filterValue = (filterOperator, value, filter) => {
+  switch (filterOperator) {
+    case "contains":
+      return value.toLowerCase().includes(filter.toLowerCase());
+    default:
+      return value === filter;
+  }
+};
+
+exports.filterRoutes = (routes, filter, filterOperator = undefined, limit = undefined) => {
   let filteredRoutes = routes;
-  const validRouteFilters = ["county", "previousRoute", "previousOperator"];
+  const validRouteFilters = ["county", "previousRoute", "previousOperator", "id"];
   for (const validFilter of validRouteFilters) {
-    filteredRoutes = filter[validFilter] ? filteredRoutes.filter(r => r[validFilter] === filter[validFilter]) : filteredRoutes;
+    filteredRoutes = filter[validFilter]
+      ? filteredRoutes.filter(r => filterValue(filterOperator, r[validFilter], filter[validFilter]))
+      : filteredRoutes;
   }
 
   filteredRoutes = limit ? filteredRoutes.slice(0, limit) : filteredRoutes;
