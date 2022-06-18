@@ -82,10 +82,25 @@ const getDirectionStops = async (directionId) => {
   return stops;
 };
 
+const getDirectionDurationInMinutes = (stops) => {
+  const today = new Date().toLocaleDateString("sv");
+  const firstTime = stops[0].departures
+    .find(d => d.isAvailableToday)?.times
+    .map(time => new Date(`${today} ${time}:00`))
+    .find(time => time > new Date());
+  const lastTime = stops[stops.length - 1].departures
+    .find(d => d.isAvailableToday)?.times
+    .map(time => new Date(`${today} ${time}:00`))
+    .find(time => time > firstTime);
+  return ((lastTime - firstTime) / 1000) / 60;
+};
+
 exports.getDirection = async (directionId) => {
   const directions = this.getRouteDirections(directionId);
   const currentRouteId = directionId.substring(0, 4);
   const direction = directions.find(direction => direction.id === directionId);
+  const stops = await getDirectionStops(direction.id);
+  const durationInMinutes = getDirectionDurationInMinutes(stops);
   return {
     directionId: direction.id,
     direction: direction.direction,
@@ -93,6 +108,7 @@ exports.getDirection = async (directionId) => {
     previousRouteId: this.getPreviousRoute(currentRouteId),
     start: direction.start.replace(" | Circular", ""),
     end: direction.end,
-    stops: await getDirectionStops(direction.id)
+    durationInMinutes,
+    stops
   };
 };
