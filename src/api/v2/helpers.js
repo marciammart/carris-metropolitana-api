@@ -1,16 +1,18 @@
+const groupBy = require("lodash/groupBy");
 const originalData = require("../../../data/original_data");
+const { requestTimetable } = require("../v1/helpers");
 
-exports.filterRoutes = (routes, filter) => {
-  let filteredRoutes = routes;
+exports.filterDirections = (directions, filter) => {
+  let filteredDirections = directions;
   const validRouteFilters = ["previousRouteId", "currentRouteId"];
   for (const validFilter of validRouteFilters) {
-    filteredRoutes = filter[validFilter]
-      ? filteredRoutes.filter(r => r[validFilter]?.includes(filter[validFilter]))
-      : filteredRoutes;
+    filteredDirections = filter[validFilter]
+      ? filteredDirections.filter(r => r[validFilter]?.includes(filter[validFilter]))
+      : filteredDirections;
   }
 
-  filteredRoutes = filter.limit ? filteredRoutes.slice(0, filter.limit) : filteredRoutes;
-  return filteredRoutes;
+  filteredDirections = filter.limit ? filteredDirections.slice(0, filter.limit) : filteredDirections;
+  return filteredDirections;
 };
 
 exports.getPreviousRoute = (currentRoute) => {
@@ -41,12 +43,12 @@ exports.getRouteDirections = (id) => {
     ));
 };
 
-exports.getRoutes = () => {
-  let routes = [];
+exports.getDirections = () => {
+  let routesDirections = [];
   const currentRouteIds = Object.keys(originalData.routeSchedules);
   for (const currentRouteId of currentRouteIds) {
     const directions = this.getRouteDirections(currentRouteId);
-    routes = routes.concat(directions.map(direction => ({
+    routesDirections = routesDirections.concat(directions.map(direction => ({
       directionId: direction.id,
       direction: direction.direction,
       currentRouteId,
@@ -56,5 +58,41 @@ exports.getRoutes = () => {
     })));
   }
 
-  return routes;
+  return routesDirections;
+};
+
+const getDirectionStops = async (directionId) => {
+  let stops = [];
+  const timetable = await requestTimetable(directionId);
+  for (const [stopName, times] of timetable) {
+    const availabilities = groupBy(times, (time) => time[1]);
+    const today = new Date().toLocaleDateString("sv").replaceAll("-", "");
+    const departures = Object.entries(availabilities).map(([availability, times]) => (
+      {
+        availabilityId: availability,
+        availability: originalData.scheduleTypes[availability],
+        times: times.map(t => t[0]),
+        isAvailableToday: originalData.servicesByDate[today].includes(availability)
+      }));
+    stops = stops.concat({
+      name: stopName,
+      departures
+    });
+  }
+  return stops;
+};
+
+exports.getDirection = async (directionId) => {
+  const directions = this.getRouteDirections(directionId);
+  const currentRouteId = directionId.substring(0, 4);
+  const direction = directions.find(direction => direction.id === directionId);
+  return {
+    directionId: direction.id,
+    direction: direction.direction,
+    currentRouteId,
+    previousRouteId: this.getPreviousRoute(currentRouteId),
+    start: direction.start.replace(" | Circular", ""),
+    end: direction.end,
+    stops: await getDirectionStops(direction.id)
+  };
 };

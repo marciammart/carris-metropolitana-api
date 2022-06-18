@@ -63,7 +63,7 @@ exports.getRoute = (routeId) => {
   return route;
 };
 
-const requestTimetable = async (directionId) => {
+exports.requestTimetable = async (directionId) => {
   const response = await axios.get(`${this.CARRIS_BASE_URL}/${directionId}.json`, {
     credentials: "omit",
     headers: {
@@ -83,7 +83,7 @@ const requestTimetable = async (directionId) => {
 };
 
 exports.getDepartures = async (directionId) => {
-  const timetable = await requestTimetable(directionId);
+  const timetable = await this.requestTimetable(directionId);
   const departures = timetable.map(([stop, times]) => ({
     stop,
     timetable: times.map(([time, id]) => ({
