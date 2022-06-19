@@ -69,7 +69,7 @@ const getDirectionStops = async (directionId) => {
       time,
       availabilityId,
       availability: originalData.scheduleTypes[availabilityId],
-      isAvailableToday: originalData.servicesByDate[today].includes(availabilityId)
+      isAvailableToday: originalData.servicesByDate[today].includes(availabilityId.toString())
     })).filter(time => time.time.match(/([0-9]{2}):([0-9]{2})/));
     stops = stops.concat({
       name: stopName,
