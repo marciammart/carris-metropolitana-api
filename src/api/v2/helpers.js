@@ -83,13 +83,11 @@ const getDirectionDurationInMinutes = (stops) => {
   const today = new Date().toLocaleDateString("sv");
   const firstTime = stops[0].departures
     .filter(departure => departure.isAvailableToday)
-    .flatMap(departure => departure.times)
-    .map(time => new Date(`${today} ${time}:00`))
+    .map(departure => new Date(`${today} ${departure.time}:00`))
     .find(time => time > new Date());
   const lastTime = stops[stops.length - 1].departures
     .filter(departure => departure.isAvailableToday)
-    .flatMap(departure => departure.times)
-    .map(time => new Date(`${today} ${time}:00`))
+    .map(departure => new Date(`${today} ${departure.time}:00`))
     .find(time => time > firstTime);
   return ((lastTime - firstTime) / 1000) / 60;
 };
