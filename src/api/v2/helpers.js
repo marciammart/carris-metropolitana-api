@@ -1,4 +1,3 @@
-const groupBy = require("lodash/groupBy");
 const originalData = require("../../../data/original_data");
 const { requestTimetable } = require("../v1/helpers");
 
@@ -65,15 +64,13 @@ const getDirectionStops = async (directionId) => {
   let stops = [];
   const timetable = await requestTimetable(directionId);
   for (const [stopName, times] of timetable) {
-    const availabilities = groupBy(times, (time) => time[1]);
     const today = new Date().toLocaleDateString("sv").replaceAll("-", "");
-    const departures = Object.entries(availabilities).map(([availability, times]) => (
-      {
-        availabilityId: availability,
-        availability: originalData.scheduleTypes[availability],
-        times: times.map(time => time[0]).filter(time => time.match(/([0-9]{2}):([0-9]{2})/)),
-        isAvailableToday: originalData.servicesByDate[today].includes(availability)
-      }));
+    const departures = times.map(([time, availabilityId]) => ({
+      time,
+      availabilityId,
+      availability: originalData.scheduleTypes[availabilityId],
+      isAvailableToday: originalData.servicesByDate[today].includes(availabilityId)
+    })).filter(time => time.time.match(/([0-9]{2}):([0-9]{2})/));
     stops = stops.concat({
       name: stopName,
       departures
