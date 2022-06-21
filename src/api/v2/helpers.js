@@ -1,3 +1,4 @@
+const moment = require("moment-timezone");
 const originalData = require("../../../data/original_data");
 const { requestTimetable } = require("../v1/helpers");
 
@@ -10,14 +11,17 @@ exports.filterDirections = (directions, filter) => {
       : filteredDirections;
   }
 
-  filteredDirections = filter.limit ? filteredDirections.slice(0, filter.limit) : filteredDirections;
+  filteredDirections = filter.limit
+    ? filteredDirections.slice(0, filter.limit)
+    : filteredDirections;
   return filteredDirections;
 };
 
 exports.getPreviousRoute = (currentRoute) => {
   const previousRoutes = Object.assign({}, ...Object.entries(originalData.routesConversion)
     .flatMap(([_, routes]) => routes));
-  const previousRoute = Object.entries(previousRoutes).find(([previousRoute, newRoutes]) => newRoutes.map(route => route[0]).includes(currentRoute));
+  const previousRoute = Object.entries(previousRoutes)
+    .find(([_, newRoutes]) => newRoutes.map(route => route[0]).includes(currentRoute));
   return previousRoute ? previousRoute[0] : undefined;
 };
 
@@ -60,11 +64,11 @@ exports.getDirections = () => {
   return routesDirections;
 };
 
-const getDirectionStops = async (directionId) => {
+exports.getDirectionStops = async (directionId) => {
   let stops = [];
   const timetable = await requestTimetable(directionId);
   for (const [stopName, times] of timetable) {
-    const today = new Date().toLocaleDateString("sv").replaceAll("-", "");
+    const today = moment.tz("Europe/Lisbon").format("YYYYMMDD");
     const departures = times.map(([time, availabilityId]) => ({
       time,
       availabilityId,
@@ -79,16 +83,23 @@ const getDirectionStops = async (directionId) => {
   return stops;
 };
 
-const getDirectionDurationInMinutes = (stops) => {
-  const today = new Date().toLocaleDateString("sv");
-  const firstTime = stops[0].departures
+exports.hasNextDeparture = (stops) => {
+  const today = moment.tz("Europe/Lisbon").format("YYYY-MM-DD");
+  const nextDeparture = stops.flatMap(stop => stop.departures)
     .filter(departure => departure.isAvailableToday)
-    .map(departure => new Date(`${today} ${departure.time}:00`))
-    .find(time => time > new Date());
-  const lastTime = stops[stops.length - 1].departures
-    .filter(departure => departure.isAvailableToday)
-    .map(departure => new Date(`${today} ${departure.time}:00`))
-    .find(time => time > firstTime);
+    .map(time => moment.tz(`${today} ${time.time}:00`, "YYYY-MM-DD HH:mm:ss", "Europe/Lisbon"))
+    .find(time => time > moment().tz("Europe/Lisbon"));
+  return !!nextDeparture;
+};
+
+exports.getDirectionDurationInMinutes = (stops) => {
+  const today = moment.tz("Europe/Lisbon").format("YYYY-MM-DD");
+  const firstTime = moment.tz(
+    `${today} ${stops[0].departures[0].time}:00`,
+    "YYYY-MM-DD HH:mm:ss", "Europe/Lisbon");
+  const lastTime = moment.tz(
+    `${today} ${stops[stops.length - 1].departures[0].time}:00`,
+    "YYYY-MM-DD HH:mm:ss", "Europe/Lisbon");
   return ((lastTime - firstTime) / 1000) / 60;
 };
 
@@ -96,8 +107,9 @@ exports.getDirection = async (directionId) => {
   const directions = this.getRouteDirections(directionId);
   const currentRouteId = directionId.substring(0, 4);
   const direction = directions.find(direction => direction.id === directionId);
-  const stops = await getDirectionStops(direction.id);
-  const durationInMinutes = getDirectionDurationInMinutes(stops);
+  const stops = await this.getDirectionStops(direction.id);
+  const durationInMinutes = this.getDirectionDurationInMinutes(stops);
+  const hasNextDeparture = this.hasNextDeparture(stops);
   return {
     directionId: direction.id,
     direction: direction.direction,
@@ -106,6 +118,7 @@ exports.getDirection = async (directionId) => {
     start: direction.start.replace(" | Circular", ""),
     end: direction.end,
     durationInMinutes,
+    hasNextDeparture,
     stops
   };
 };
