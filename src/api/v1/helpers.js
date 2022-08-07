@@ -1,7 +1,7 @@
 const originalData = require("../../../data/original_data");
 const axios = require("axios");
 
-exports.CARRIS_BASE_URL = "https://www.carrismetropolitana.pt/images/horarios";
+exports.CARRIS_BASE_URL = "https://horarios.carrismetropolitana.pt/images/horarios";
 
 exports.getPreviousOperator = (previousRoute) => {
   const name = Object.entries(originalData.operators).map(([name, routes]) => ({
